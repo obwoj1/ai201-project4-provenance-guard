@@ -27,6 +27,7 @@ POST /submit -> groq_signal  ┐
                              ├-> combine_scores -> get_label -> log -> response
                 stylo_signal ┘
 ```
+##Demo https://drive.google.com/file/d/1mD0S7QbFwb2HHaREuads0FxYVNKf3NR4/view?usp=sharing
 
 ## Detection signals
 
