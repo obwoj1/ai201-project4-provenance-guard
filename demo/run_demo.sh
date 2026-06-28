@@ -7,15 +7,24 @@ set -e
 BASE="http://127.0.0.1:5000"
 DIR="$(dirname "$0")"
 
+# Print the "text" field from a request file so the submitted input is visible.
+show_text() {
+  echo "--- submitted text: ---"
+  python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['text'])" "$1"
+  echo "-----------------------"
+}
+
 echo "=============================================="
 echo " 1. SUBMIT clearly-AI text"
 echo "=============================================="
+show_text "$DIR/ai_text.json"
 curl -s -X POST "$BASE/submit" -H "Content-Type: application/json" -d @"$DIR/ai_text.json" | python3 -m json.tool
 
 echo
 echo "=============================================="
 echo " 2. SUBMIT clearly-human text (capturing its content_id for the appeal)"
 echo "=============================================="
+show_text "$DIR/human_text.json"
 RESP=$(curl -s -X POST "$BASE/submit" -H "Content-Type: application/json" -d @"$DIR/human_text.json")
 echo "$RESP" | python3 -m json.tool
 CID=$(echo "$RESP" | python3 -c "import sys, json; print(json.load(sys.stdin)['content_id'])")
@@ -26,6 +35,7 @@ echo
 echo "=============================================="
 echo " 3. SUBMIT borderline formal-human text"
 echo "=============================================="
+show_text "$DIR/formal_human_text.json"
 curl -s -X POST "$BASE/submit" -H "Content-Type: application/json" -d @"$DIR/formal_human_text.json" | python3 -m json.tool
 
 echo
